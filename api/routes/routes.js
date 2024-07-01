@@ -3,7 +3,11 @@ import bcrypt from "bcrypt"
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
 
+import genericController from '../controllers/crudController.js';
+
 const router = express.Router();
+
+const userController = genericController(User);
 
 // Public Route
 router.get('/', (req, res) => {
