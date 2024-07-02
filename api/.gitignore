@@ -130,3 +130,5 @@ dist
 .pnp.*
 
 README.md
+routes.js
+crudController copy.js
