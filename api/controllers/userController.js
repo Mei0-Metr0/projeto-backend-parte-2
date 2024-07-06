@@ -34,6 +34,27 @@ const UserController = {
             });
         }
     },
+
+    async createAdmin(req, res) {
+        const { email } = req.body;
+
+        try {
+            const user = await User.findOneAndUpdate({ email }, { isAdmin: true }, { new: true });
+
+            if (!user) {
+                return res.status(404).json({ msg: "User not found" });
+            }
+
+            res.status(200).json({
+                msg: "User updated to admin successfully!",
+            });
+        } catch (error) {
+            res.status(500).json({
+                msg: "A server error occurred, please try again later"
+            });
+        }
+    },
+
 };
 
 export default UserController;
