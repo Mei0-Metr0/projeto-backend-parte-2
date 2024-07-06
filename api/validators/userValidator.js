@@ -27,7 +27,10 @@ const userSchema = Joi.object({
   confirmpassword: Joi.any().valid(Joi.ref('password')).required().messages({
     'any.only': 'Passwords do not match',
     'any.required': 'A confirmação da senha é obrigatória.',
-  })
+  }),
+
+  isAdmin: Joi.boolean().optional(),
+  
 });
 
 export const validateUser = (req, res, next) => {

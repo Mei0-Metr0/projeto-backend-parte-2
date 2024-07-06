@@ -19,15 +19,13 @@ app.use(express.json())
 app.use(userRoutes);
 app.use(loginRoutes);
 
-// DB Connection
-connectDatabase().catch(err => {
-    console.error('Erro ao iniciar o aplicativo:', err.message);
-    process.exit(1);
-});
+const PORT = process.env.PORT || 3000;
 
-const port = process.env.PORT
+const startServer = async () => {
+    await connectDatabase();
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+};
 
-app.listen(port, function() {
-    console.log(`Servidor rodando na porta ${port}`);
-})
-
+startServer();
