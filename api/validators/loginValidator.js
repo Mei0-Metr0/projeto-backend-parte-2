@@ -12,12 +12,12 @@ const loginSchema = Joi.object({
     'string.empty': 'A senha não pode estar vazia.',
     'any.required': 'A senha é obrigatória.',
   })
-});
+})
 
 export const validateLogin = (req, res, next) => {
-  const { error } = loginSchema.validate(req.body, { abortEarly: false });
+  const { error } = loginSchema.validate(req.body, { abortEarly: false })
   if (error) {
-    return res.status(400).json({ errors: error.details.map(detail => detail.message) });
+    return res.status(400).json({ errors: error.details.map(detail => detail.message) })
   }
   next();
-};
+}

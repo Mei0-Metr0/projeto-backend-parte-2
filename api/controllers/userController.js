@@ -1,19 +1,19 @@
 import bcrypt from "bcrypt"
-import User from '../models/User.js';
+import User from '../models/User.js'
 
 const UserController = {
 
     async register(req, res) {
-        const { name, email, password, isAdmin } = req.body;
+        const { name, email, password, isAdmin } = req.body
 
-        const userExists = await User.findOne({ email });
+        const userExists = await User.findOne({ email })
 
         if (userExists) {
-            return res.status(422).json({ msg: "Email already exists" });
+            return res.status(422).json({ msg: "Email already exists" })
         }
 
         const salt = await bcrypt.genSalt(12);
-        const passwordHash = await bcrypt.hash(password, salt);
+        const passwordHash = await bcrypt.hash(password, salt)
 
         const newUser = new User({
             name,
@@ -39,10 +39,10 @@ const UserController = {
         const { email } = req.body;
 
         try {
-            const user = await User.findOneAndUpdate({ email }, { isAdmin: true }, { new: true });
+            const user = await User.findOneAndUpdate({ email }, { isAdmin: true }, { new: true })
 
             if (!user) {
-                return res.status(404).json({ msg: "User not found" });
+                return res.status(404).json({ msg: "User not found" })
             }
 
             res.status(200).json({
@@ -58,26 +58,63 @@ const UserController = {
 
     async deleteUser(req, res) {
         
-        const { id } = req.params;
+        const { id } = req.params
 
         try {
-            const user = await User.findById(id);
+            const user = await User.findById(id)
 
             if (!user) {
-                return res.status(404).json({ msg: "User not found" });
+                return res.status(404).json({ msg: "User not found" })
             }
 
             if (user.isAdmin) {
-                return res.status(403).json({ msg: "Deleting administrators is not allowed" });
+                return res.status(403).json({ msg: "Deleting administrators is not allowed" })
             }
 
             await user.deleteOne({ _id: user.id })
-            res.json({ msg: "User removed successfully" });
+            res.json({ msg: "User removed successfully" })
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ msg: 'Server error.' });
+            console.error(err)
+            res.status(500).json({ msg: 'Server error.' })
         }
     },
+
+    async updateUser(req, res) {
+        const { id } = req.params;
+        const { name, email, password, isAdmin } = req.body
+
+        try {
+            const user = await User.findById(id)
+
+            if (!user) {
+                return res.status(404).json({ msg: "User not found" })
+            }
+
+            if (!req.user.isAdmin && req.user._id.toString() !== id) {
+                return res.status(403).json({ 
+                    msg: "Unauthorized to update this user" 
+                });
+            }
+
+            user.name = name || user.name
+            user.email = email || user.email
+
+            if (password) {
+                const salt = await bcrypt.genSalt(12)
+                user.password = await bcrypt.hash(password, salt)
+            }
+
+            user.isAdmin = isAdmin === undefined ? user.isAdmin : isAdmin
+
+            const updatedUser = await user.save();
+            res.json(updatedUser)
+        } catch (err) {
+            console.error(err)
+            res.status(500).json({ 
+                msg: 'Server error.' 
+            });
+        }
+    }
 };
 
 export default UserController;

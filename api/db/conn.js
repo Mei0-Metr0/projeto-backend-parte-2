@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
 async function connectDatabase() {
 
@@ -11,13 +11,13 @@ async function connectDatabase() {
     if (mongoose.connection.readyState === 0) {
         try {
             await mongoose.connect(uri)
-            console.log('Conexão com o banco de dados estabelecida com sucesso');
+            console.log('Conexão com o banco de dados estabelecida com sucesso')
         } catch (error) {
             console.log(`Erro ao conectar com o banco de dados ${error}`)
             process.exit(1);
         }
     } else {
-        console.log('MongoDB connection already established');
+        console.log('MongoDB connection already established')
     }
 }
 

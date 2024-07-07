@@ -31,7 +31,7 @@ const userSchema = Joi.object({
 
   isAdmin: Joi.boolean().optional(),
   
-});
+})
 
 export const validateUser = (req, res, next) => {
   const { error } = userSchema.validate(req.body, { abortEarly: false });
@@ -39,4 +39,4 @@ export const validateUser = (req, res, next) => {
     return res.status(400).json({ errors: error.details.map(detail => detail.message) });
   }
   next();
-};
+}

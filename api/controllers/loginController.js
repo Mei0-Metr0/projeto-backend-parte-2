@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt"
 import jwt from 'jsonwebtoken'
 
-import User from '../models/User.js';
+import User from '../models/User.js'
 
 const login = async (req, res) => {
 
@@ -47,4 +47,4 @@ const login = async (req, res) => {
     }
 }
 
-export default login;
+export default login
