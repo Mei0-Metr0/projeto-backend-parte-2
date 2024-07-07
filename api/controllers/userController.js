@@ -55,6 +55,29 @@ const UserController = {
         }
     },
 
+
+    async deleteUser(req, res) {
+        
+        const { id } = req.params;
+
+        try {
+            const user = await User.findById(id);
+
+            if (!user) {
+                return res.status(404).json({ msg: "User not found" });
+            }
+
+            if (user.isAdmin) {
+                return res.status(403).json({ msg: "Deleting administrators is not allowed" });
+            }
+
+            await user.deleteOne({ _id: user.id })
+            res.json({ msg: "User removed successfully" });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ msg: 'Server error.' });
+        }
+    },
 };
 
 export default UserController;

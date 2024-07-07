@@ -6,7 +6,8 @@ import { checkAdmin } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.post('/register', validateUser, UserController.register);
-router.post('/create-admin', checkAdmin, UserController.createAdmin);
+router.post('/user/register', validateUser, UserController.register);
+router.post('/user/create-admin', checkAdmin, UserController.createAdmin);
+router.delete('/user/delete-user/:id', checkAdmin, UserController.deleteUser);
 
 export default router;

@@ -28,9 +28,7 @@ function checkToken(req, res, next) {
 async function checkAdmin(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(" ")[1]
-    console.log("Token", token, "Token")
     if (!token) {
-        console.log("ENtra aqui")
         return res.status(401).json({ msg: "Access denied" })
     }
 
