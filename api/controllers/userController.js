@@ -114,6 +114,19 @@ const UserController = {
                 msg: 'Server error.' 
             });
         }
+    },
+
+    async listCustomers(req, res) {
+        try {
+            const { page = 1, limit = 5 } = req.query;
+            const nonAdminUsers = await User.find({ isAdmin: false })
+                .skip((page - 1) * limit)
+                .limit(parseInt(limit));
+            res.json(nonAdminUsers);
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ msg: 'Server error.' });
+        }
     }
 };
 

@@ -10,5 +10,6 @@ router.post('/user/register', validateUser, UserController.register)
 router.post('/user/create-admin', checkAdmin, UserController.createAdmin)
 router.delete('/user/delete-user/:id', checkAdmin, UserController.deleteUser)
 router.put('/user/update-user/:id', checkToken, UserController.updateUser)
+router.get('/customers', checkAdmin, UserController.listCustomers)
 
 export default router;
