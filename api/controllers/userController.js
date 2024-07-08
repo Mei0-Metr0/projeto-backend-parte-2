@@ -28,7 +28,6 @@ const UserController = {
                 msg: "User created successfully!"
             });
         } catch (error) {
-            console.log(error);
             res.status(500).json({
                 msg: "A server error occurred, please try again later"
             });
@@ -74,7 +73,6 @@ const UserController = {
             await user.deleteOne({ _id: user.id })
             res.json({ msg: "User removed successfully" })
         } catch (err) {
-            console.error(err)
             res.status(500).json({ msg: 'Server error.' })
         }
     },
@@ -109,7 +107,6 @@ const UserController = {
             const updatedUser = await user.save();
             res.json(updatedUser)
         } catch (err) {
-            console.error(err)
             res.status(500).json({ 
                 msg: 'Server error.' 
             });
@@ -118,16 +115,25 @@ const UserController = {
 
     async listCustomers(req, res) {
         try {
-            const { page = 1, limit = 5 } = req.query;
+            const { page = 1, limit = 5 } = req.query
             const nonAdminUsers = await User.find({ isAdmin: false })
                 .skip((page - 1) * limit)
-                .limit(parseInt(limit));
-            res.json(nonAdminUsers);
+                .limit(parseInt(limit))
+            res.json(nonAdminUsers)
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ msg: 'Server error.' });
+            res.status(500).json({ msg: 'Server error.' })
+        }
+    },
+
+    async getClienteById (req, res) {
+        try {
+            const user = await User.findById(req.params.id)
+            if (!user) return res.status(404).json({ error: 'User not found' })
+            res.json(user)
+        } catch (err) {
+            res.status(500).json({ msg: 'Server error.' })
         }
     }
 };
 
-export default UserController;
+export default UserController

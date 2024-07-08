@@ -11,5 +11,6 @@ router.post('/user/create-admin', checkAdmin, UserController.createAdmin)
 router.delete('/user/delete-user/:id', checkAdmin, UserController.deleteUser)
 router.put('/user/update-user/:id', checkToken, UserController.updateUser)
 router.get('/customers', checkAdmin, UserController.listCustomers)
+router.get('/customers/:id', checkAdmin, UserController.getClienteById)
 
 export default router;
