@@ -56,7 +56,7 @@ const UserController = {
 
 
     async deleteUser(req, res) {
-        
+
         const { id } = req.params
 
         try {
@@ -89,8 +89,8 @@ const UserController = {
             }
 
             if (!req.user.isAdmin && req.user._id.toString() !== id) {
-                return res.status(403).json({ 
-                    msg: "Unauthorized to update this user" 
+                return res.status(403).json({
+                    msg: "Unauthorized to update this user"
                 });
             }
 
@@ -107,8 +107,8 @@ const UserController = {
             const updatedUser = await user.save();
             res.json(updatedUser)
         } catch (err) {
-            res.status(500).json({ 
-                msg: 'Server error.' 
+            res.status(500).json({
+                msg: 'Server error.'
             });
         }
     },
@@ -117,15 +117,23 @@ const UserController = {
         try {
             const { page = 1, limit = 5 } = req.query
             const nonAdminUsers = await User.find({ isAdmin: false })
+                .limit(limit * 1)
                 .skip((page - 1) * limit)
-                .limit(parseInt(limit))
-            res.json(nonAdminUsers)
+                .exec();
+
+            const count = await nonAdminUsers.countDocuments();
+
+            res.json({
+                nonAdminUsers,
+                totalPages: Math.ceil(count / limit),
+                currentPage: page,
+            });
         } catch (err) {
             res.status(500).json({ msg: 'Server error.' })
         }
     },
 
-    async getClienteById (req, res) {
+    async getClienteById(req, res) {
         try {
             const user = await User.findById(req.params.id)
             if (!user) return res.status(404).json({ error: 'User not found' })

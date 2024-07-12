@@ -4,7 +4,8 @@ import dotenv from 'dotenv';
 
 import loginRoutes from './routes/authRoutes.js'
 import userRoutes from './routes/userRoutes.js'
-import serviceRoutes from './routes/serviceRoutes.js'
+import petRoutes from './routes/petRoutes.js'
+import adoptionRoutes from './routes/adoptionRoutes.js'
 
 import connectDatabase from './db/conn.js'
 
@@ -19,7 +20,8 @@ app.use(express.json())
 // Rotas
 app.use(userRoutes)
 app.use(loginRoutes)
-app.use(serviceRoutes)
+app.use(petRoutes)
+app.use(adoptionRoutes)
 
 const PORT = process.env.PORT || 3000;
 
