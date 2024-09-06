@@ -17,7 +17,7 @@ async function connectDatabase() {
             process.exit(1);
         }
     } else {
-        console.log('MongoDB connection already established')
+        console.log('Conexão MongoDB já estabelecida')
     }
 }
 

@@ -17,6 +17,9 @@ const ServiceSchema = new mongoose.Schema({
     type: Boolean, 
     default: false 
   },
+  image: {
+    type: String,
+  },
   description: { 
     type: String, 
     required: true 

@@ -1,10 +1,10 @@
 import express from 'express'
 
-import login from '../controllers/loginController.js'
+import LoginController from '../controllers/loginController.js'
 import { validateLogin } from '../validators/loginValidator.js'
 
 const router = express.Router();
 
-router.post('/login', validateLogin, login)
+router.post('/login', validateLogin, LoginController.login)
 
 export default router;

@@ -6,8 +6,19 @@ import loginRoutes from './routes/authRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import petRoutes from './routes/petRoutes.js'
 import adoptionRoutes from './routes/adoptionRoutes.js'
+import installRoute from './routes/installRoute.js';
+import docs from './routes/swaggerRoute.js';
 
 import connectDatabase from './db/conn.js'
+
+/*
+    mongoose: Uma biblioteca ODM (Object Data Modeling);
+    bcrypt: Uma biblioteca usada para hashing de senhas.
+    
+    JWT é um padrão que define um token de segurança que é auto-contido, ou seja, contém todas as informações 
+    necessárias (claims) para identificar o usuário ou garantir a segurança da comunicação, sem a necessidade 
+    de manter estado no servidor.
+*/
 
 dotenv.config();
 
@@ -22,6 +33,20 @@ app.use(userRoutes)
 app.use(loginRoutes)
 app.use(petRoutes)
 app.use(adoptionRoutes)
+app.use(installRoute)
+app.use(docs)
+
+/*
+// Swagger
+import swaggerUI from 'swagger-ui-express';
+import swaggerFile from './swagger_doc.json' assert { type: 'json' };
+
+
+    swaggerUI.serve: Middleware que serve os arquivos estáticos necessários para o Swagger UI funcionar;
+    swaggerUI.setup(swaggerFile): Configura a interface do Swagger UI com base no arquivo JSON swaggerFile que contém a documentação da API.
+
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerFile))
+*/
 
 const PORT = process.env.PORT || 3000;
 

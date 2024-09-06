@@ -19,8 +19,6 @@ const userSchema = Joi.object({
   password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required().messages({
     'string.empty': 'A senha não pode estar vazia.',
     'string.pattern.base': 'A senha deve conter apenas letras e números.',
-    'string.min': 'A senha deve ter pelo menos {#limit} caracteres.',
-    'string.max': 'A senha deve ter no máximo {#limit} caracteres.',
     'any.required': 'A senha é obrigatória.',
   }),
 

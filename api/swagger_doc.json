@@ -1,0 +1,946 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Adoption REST",
+    "description": "API REST para gerenciamento de adoções de pets"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/user/register": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Registra um novo usuário no sistema.",
+        "description": "Rota de registro que permite a criação de novos usuários no sistema. Se o email já estiver cadastrado, ela retorna um erro: \"Email já cadastrado\". Caso contrário, ela cria o usuário com os dados fornecidos e uma senha segura (hash).",
+        "parameters": [
+          {
+            "name": "nome",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                },
+                "name": {
+                  "example": "any"
+                },
+                "isAdmin": {
+                  "example": "any"
+                }
+              }
+            },
+            "description": "Nome do usuário.",
+            "required": true,
+            "example": "João"
+          },
+          {
+            "name": "email",
+            "in": "body",
+            "description": "O email do usuário",
+            "required": true,
+            "example": "joao@email.com",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          {
+            "name": "senha",
+            "in": "body",
+            "description": "A senha do usuário (será hashada antes de ser salva)",
+            "required": true,
+            "example": "12345678",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          {
+            "name": "isAdmin",
+            "in": "body",
+            "description": "Indica se o usuário tem permissões administrativas (opcional).",
+            "required": true,
+            "example": "true",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/create-admin": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Atualiza um usuário para perfil de administrador",
+        "description": "Atualiza o perfil de um usuário para administrador, modificando o campo isAdmin para true com base no email fornecido.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                }
+              }
+            },
+            "description": "Email do usuário",
+            "required": true,
+            "example": "joao@email.com"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/delete-user/{id}": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Exclui um usuário do sistema",
+        "description": "Excluir um usuário específico do banco de dados com base no ID fornecido. Não permite a exclusão de usuários com perfil de administrador.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do usuário a ser excluído"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/update-user/{id}": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Atualiza um usuário no sistema",
+        "description": "Atualiza as informações de um usuário existente no banco de dados com base no ID fornecido. Somente administradores ou o próprio usuário podem fazer essa atualização.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do usuário a ser atualizado"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Dados para atualizar o usuário.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "João"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "joao@exemplo.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "12345678"
+                },
+                "isAdmin": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/customers": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Lista usuários não administradores com paginação",
+        "description": "Lista os usuários não-administradores (clientes) no sistema, com suporte à paginação e limite de resultados por página.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página a ser retornada (default é 1).",
+            "required": false,
+            "type": "integer",
+            "example": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Número de usuários por página (valores permitidos são 5, 10, 30; default é 5).",
+            "required": false,
+            "type": "integer",
+            "example": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/customers/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Recupera um cliente pelo ID",
+        "description": "Recupera as informações de um cliente específico com base no ID fornecido",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do cliente a ser recuperado",
+            "example": "user123"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "summary": "Rota de autenticação de usuários",
+        "description": "Permite que o usuário faça login com seu email e senha. Se as credenciais forem válidas, um token JWT será gerado e retornado para o cliente. Em caso de falha, a rota retornará um erro apropriado, como \"Usuário não encontrado\" ou \"Senha inválida\"",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Informações de login",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "object"
+                },
+                "properties": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "example": {
+                          "type": "string",
+                          "example": "email@example.com"
+                        }
+                      }
+                    },
+                    "senha": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "example": {
+                          "type": "string",
+                          "example": "password123"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/pet/register": {
+      "post": {
+        "tags": [
+          "Pet"
+        ],
+        "summary": "Registra um novo pet no sistema.",
+        "description": "Rota para cadastrar um novo pet no sistema. Recebe os dados do pet e a imagem do pet, salva no banco de dados e retorna uma mensagem de sucesso.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "age": {
+                  "example": "any"
+                },
+                "breed": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                }
+              }
+            },
+            "description": "Nome do pet.",
+            "required": true,
+            "example": "Rex"
+          },
+          {
+            "name": "age",
+            "in": "body",
+            "description": "Idade do pet.",
+            "required": true,
+            "example": 3,
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          {
+            "name": "breed",
+            "in": "body",
+            "description": "Raça do pet.",
+            "required": true,
+            "example": "Labrador",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          {
+            "name": "description",
+            "in": "body",
+            "description": "Descrição do pet.",
+            "required": false,
+            "example": "Pet amigável e brincalhão.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "description": "Imagem do pet.",
+            "required": false,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/pet/delete-pet/{id}": {
+      "delete": {
+        "tags": [
+          "Pet"
+        ],
+        "summary": "Exclui um pet do sistema.",
+        "description": "Rota para excluir um pet específico do banco de dados com base no ID fornecido.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do pet a ser excluído.",
+            "example": "pet123"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/pet/update-pet/{id}": {
+      "put": {
+        "tags": [
+          "Pet"
+        ],
+        "summary": "Atualiza as informações de um pet existente.",
+        "description": "Rota para atualizar as informações de um pet existente com base no ID fornecido. Permite atualizar todos os campos, incluindo a imagem do pet.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do pet a ser atualizado.",
+            "example": "pet123"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Dados para atualizar o pet.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Rex"
+                },
+                "age": {
+                  "type": "number",
+                  "example": 4
+                },
+                "breed": {
+                  "type": "string",
+                  "example": "Labrador"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Pet brincalhão e carinhoso."
+                }
+              }
+            }
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "description": "Imagem do pet.",
+            "required": false,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/pets": {
+      "get": {
+        "tags": [
+          "Pet"
+        ],
+        "summary": "Lista todos os pets com paginação.",
+        "description": "Rota para listar todos os pets no sistema com suporte à paginação e limite de resultados por página.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página a ser retornada (default é 1).",
+            "required": false,
+            "type": "integer",
+            "example": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Número de pets por página (valores permitidos são 5, 10, 30; default é 5).",
+            "required": false,
+            "type": "integer",
+            "example": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/pet/{id}": {
+      "get": {
+        "tags": [
+          "Pet"
+        ],
+        "summary": "Recupera um pet pelo ID.",
+        "description": "Rota para recuperar as informações de um pet específico com base no ID fornecido.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do pet a ser recuperado.",
+            "example": "pet123"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/adoption/register": {
+      "post": {
+        "tags": [
+          "Adoption"
+        ],
+        "summary": "Registra uma nova adoção de pet",
+        "description": "Registra uma nova adoção de pet, marcando o pet como adotado. Verifica se o pet existe e se não está já adotado.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "pet",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "pet": {
+                  "example": "any"
+                }
+              }
+            },
+            "description": "ID do pet a ser adotado",
+            "required": true,
+            "example": "pet123"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/adoption/delete-adoption/{id}": {
+      "delete": {
+        "tags": [
+          "Adoption"
+        ],
+        "summary": "Exclui uma adoção existente",
+        "description": "Exclui uma adoção existente com base no ID fornecido. Verifica se a adoção pertence ao usuário autenticado e atualiza o status do pet para não adotado.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da adoção a ser excluída",
+            "example": "adoption123"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/adoption/update-adoption/{id}": {
+      "put": {
+        "tags": [
+          "Adoption"
+        ],
+        "summary": "Atualiza uma adoção existente",
+        "description": "Atualiza uma adoção existente, permitindo a mudança do pet adotado. Verifica se a adoção pertence ao usuário autenticado.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da adoção a ser atualizada",
+            "example": "adoption123"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Dados para atualizar a adoção.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "pet": {
+                  "type": "string",
+                  "example": "pet456"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/adoptions": {
+      "get": {
+        "tags": [
+          "Adoption"
+        ],
+        "summary": "Lista as adoções do usuário com paginação",
+        "description": "Lista todas as adoções do usuário com suporte à paginação e limite de resultados por página.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página a ser retornada (default é 1).",
+            "required": false,
+            "type": "integer",
+            "example": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Número de adoções por página (valores permitidos são 5, 10, 30; default é 5).",
+            "required": false,
+            "type": "integer",
+            "example": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/adoption/{id}": {
+      "get": {
+        "tags": [
+          "Adoption"
+        ],
+        "summary": "Recupera uma adoção pelo ID",
+        "description": "Recupera as informações de uma adoção específica com base no ID fornecido.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da adoção a ser recuperada",
+            "example": "adoption123"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/install": {
+      "get": {
+        "tags": [
+          "Database"
+        ],
+        "summary": "Instala e popula o banco de dados com dados de amostra",
+        "description": "Remove dados existentes e popula o banco de dados com usuários, pets e adoções de amostra. Atualiza o status de adoção dos pets para adotados.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  }
+}
