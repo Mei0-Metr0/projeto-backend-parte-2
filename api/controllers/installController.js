@@ -19,11 +19,11 @@ const InstallController = {
 
             // Criar usuários
             const users = [
-                { name: 'Joice', email: 'joice@example.com', password: '123456', isAdmin: true },
-                { name: 'Lucas', email: 'lucas@example.com', password: '123456', isAdmin: false },
-                { name: 'Montilla', email: 'montilla@example.com', password: '123456', isAdmin: false },
-                { name: 'Felippe', email: 'felippe@example.com', password: '123456', isAdmin: false },
-                { name: 'Marcus Vinícius', email: 'marcus@example.com', password: '123456', isAdmin: false }
+                { name: 'Joice', email: 'joice@email.com', password: '123456', isAdmin: true },
+                { name: 'Lucas', email: 'lucas@email.com', password: '123456', isAdmin: false },
+                { name: 'Montilla', email: 'montilla@email.com', password: '123456', isAdmin: false },
+                { name: 'Felippe', email: 'felippe@email.com', password: '123456', isAdmin: false },
+                { name: 'Marcus Vinícius', email: 'marcus@email.com', password: '123456', isAdmin: false }
             ];
 
             // Hashing senhas
@@ -35,11 +35,11 @@ const InstallController = {
 
             // Criar pets
             const pets = [
-                { name: 'Luly', age: 4, breed: 'Pincher', adopted: false, description: 'Friendly dog' },
-                { name: 'Whiskers', age: 1, breed: 'Siamese', adopted: false, description: 'Quiet cat' },
-                { name: 'Luna', age: 4, breed: 'Basset', adopted: false, description: 'Loyal dog' },
-                { name: 'Mittens', age: 2, breed: 'Maine Coon', adopted: false, description: 'Playful cat' },
-                { name: 'Haila', age: 5, breed: 'Box', adopted: false, description: 'Loves to play' }
+                { name: 'Luly', age: 4, breed: 'Pincher', adopted: false, description: 'Dócil' },
+                { name: 'Whiskers', age: 1, breed: 'Siamese', adopted: false, description: 'Caçador' },
+                { name: 'Luna', age: 4, breed: 'Basset', adopted: false, description: 'Amigável' },
+                { name: 'Mittens', age: 2, breed: 'Maine Coon', adopted: false, description: 'Fofa' },
+                { name: 'Haila', age: 5, breed: 'Box', adopted: false, description: 'Brincalhona' }
             ];
 
             const createdPets = await Pet.insertMany(pets);

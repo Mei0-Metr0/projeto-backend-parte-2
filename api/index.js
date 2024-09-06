@@ -36,18 +36,6 @@ app.use(adoptionRoutes)
 app.use(installRoute)
 app.use(docs)
 
-/*
-// Swagger
-import swaggerUI from 'swagger-ui-express';
-import swaggerFile from './swagger_doc.json' assert { type: 'json' };
-
-
-    swaggerUI.serve: Middleware que serve os arquivos estáticos necessários para o Swagger UI funcionar;
-    swaggerUI.setup(swaggerFile): Configura a interface do Swagger UI com base no arquivo JSON swaggerFile que contém a documentação da API.
-
-app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerFile))
-*/
-
 const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {

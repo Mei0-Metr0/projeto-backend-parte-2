@@ -97,12 +97,13 @@ const PetController = {
 
         try {
             const pets = await Pet.find()
-                .limit(limit * 1)
-                .skip((page - 1) * limit)
+                .limit(limit * 1) // Define o número máximo de documentos a serem retornados por página.
+                .skip((page - 1) * limit) // Pula um número específico de documentos baseado na página atual e no limite.
                 .exec();
 
             const count = await Pet.countDocuments();
 
+            // Retorna os pets encontrados, o total de páginas e a página atual.
             res.json({
                 pets,
                 totalPages: Math.ceil(count / limit),
@@ -178,13 +179,15 @@ const PetController = {
             const updateData = { ...req.body };
 
             if (req.file) {
-                updateData.image = req.file.path;
+                updateData.image = req.file.path; // contém o caminho do arquivo que foi salvo no servidor
             }
 
             const pet = await Pet.findByIdAndUpdate(
                 req.params.id,
+                //  substituir ou adicionar campos no documento com os valores fornecidos em updateData
                 { $set: updateData },
-                { new: true, runValidators: true }
+                // { new: true } faz com que o método retorne o documento atualizado e não o original, e { runValidators: true } garante que as validações do modelo sejam aplicadas.
+                { new: true, runValidators: true } 
             );
 
             if (!pet)

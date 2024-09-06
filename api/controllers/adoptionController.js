@@ -16,7 +16,7 @@ const AdoptionController = {
             example: 'pet123'
         }*/
 
-        const { pet } = req.body;
+        const { pet } = req.body; // Extrai o pet do corpo da requisição
 
         try {
             const animal = await Pet.findById(pet);
@@ -73,21 +73,21 @@ const AdoptionController = {
             type: 'integer',
             example: 10
         }*/
-        const { page = 1, limit = 5 } = req.query;
+        const { page = 1, limit = 5 } = req.query; //Extrai page e limit dos parâmetros de consulta.
 
         const allowedValues = [5, 10, 30];
 
         if (!allowedValues.includes(Number(limit))) {
-            return res.status(400).json({ 
-                error: 'O limite deve ser 5, 10 ou 30.' 
+            return res.status(400).json({
+                error: 'O limite deve ser 5, 10 ou 30.'
             });
         }
 
         try {
-            const adoptions = await Adoption.find({ user: req.user._id })
+            const adoptions = await Adoption.find({ user: req.user._id }) // Listar as adoções do usuário logado.
                 .populate('pet')
-                .limit(limit * 1)
-                .skip((page - 1) * limit)
+                .limit(limit * 1) // Define o limite de itens por página
+                .skip((page - 1) * limit) // Define quantos itens devem ser pulados (offset)
                 .exec();
 
             const count = await Adoption.countDocuments({ user: req.user._id });
@@ -128,8 +128,8 @@ const AdoptionController = {
             });
 
             if (adoption.user.toString() !== req.user._id.toString()) {
-                return res.status(403).json({ 
-                    error: 'Não autorizado' 
+                return res.status(403).json({
+                    error: 'Não autorizado'
                 });
             }
 
@@ -170,17 +170,20 @@ const AdoptionController = {
                     error: 'Adoção não encontrada'
                 });
 
+            //Confirma que o usuário logado é o dono da adoção.
+            // if (adoption.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
             if (adoption.user.toString() !== req.user._id.toString()) {
-                return res.status(403).json({ 
-                    error: 'Não autorizado' 
+                return res.status(403).json({
+                    error: 'Não autorizado'
                 });
             }
 
+            //Se o pet for alterado, busca o novo pet, verifica sua existência, marca o pet anterior como não adotado e o novo pet como adotado
             if (req.body.pet) {
                 const newPet = await Pet.findById(req.body.pet);
                 if (!newPet) {
-                    return res.status(404).json({ 
-                        error: 'Pet não encontrado' 
+                    return res.status(404).json({
+                        error: 'Pet não encontrado'
                     });
                 }
 
@@ -228,8 +231,8 @@ const AdoptionController = {
                 });
 
             if (adoption.user.toString() !== req.user._id.toString()) {
-                return res.status(403).json({ 
-                    error: 'Não autorizado' 
+                return res.status(403).json({
+                    error: 'Não autorizado'
                 });
             }
 
