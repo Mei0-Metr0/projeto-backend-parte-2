@@ -5,7 +5,7 @@
 ![image_info](https://img.shields.io/badge/Professor-Adriano_Rivolli-blue)
 [![Badge ServeRest](https://img.shields.io/badge/Tema-Adoção_de_Pets-green)](https://github.com/ServeRest/ServeRest/)
 
-![image_info](./assets/imagem.jpeg)
+<img src="./assets/imagem.jpeg" width="300" height="300">
 
 </div>
 
