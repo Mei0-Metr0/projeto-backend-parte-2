@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 import bcrypt from "bcrypt"
 
+// Contador de acesso, rota ue mostra os acessos do usuário logado
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -18,8 +19,17 @@ const UserSchema = new mongoose.Schema({
   isAdmin: { 
     type: Boolean, 
     default: false 
-  }
+  },
+  loginCount: { 
+    type: Number, 
+    default: 0 
+  } 
 });
+
+UserSchema.methods.incrementLoginCount = async function() {
+  this.loginCount += 1;
+  await this.save();
+};
 
 UserSchema.statics.hashPassword = async function(password) {
   /*

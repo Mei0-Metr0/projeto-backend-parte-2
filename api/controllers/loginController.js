@@ -58,6 +58,8 @@ const LoginController = {
                 jwtSecret, { expiresIn: jwtExpire }
             )
 
+            await user.incrementLoginCount();
+
             res.status(200).json({
                 msg: "Login realizado com sucesso", token
             })

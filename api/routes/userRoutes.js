@@ -13,4 +13,6 @@ router.put('/user/update-user/:id', checkToken, UserController.updateUser)
 router.get('/customers', checkAdmin, UserController.listCustomers)
 router.get('/customers/:id', checkAdmin, UserController.getClienteById)
 
+router.get('/user/login-count', checkToken, UserController.getLoginCount);
+
 export default router;

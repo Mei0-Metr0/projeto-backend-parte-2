@@ -259,6 +259,27 @@ const UserController = {
         }
     },
 
+    async getLoginCount(req, res) {
+
+        try {
+            const user = await User.findById(req.user._id);
+
+            if (!user) {
+                return res.status(404).json({
+                    error: 'Usuário não encontrado'
+                });
+            }
+
+            res.status(200).json({
+                msg: "Usuário logou no sistema: " + user.loginCount + " vezes"
+            });
+        } catch (err) {
+            res.status(500).json({
+                error: 'Erro no servidor'
+            });
+        }
+    },
+
     async getClienteById(req, res) {
 
         // #swagger.summary = 'Recupera um cliente pelo ID'
