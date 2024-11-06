@@ -1,7 +1,6 @@
 <div align="center">
 
-![image_info](https://img.shields.io/badge/Nome-Joice_Kelly_Oliveira_Mendes-pink)
-![image_info](https://img.shields.io/badge/RA-2348020-red)
+![image_info](https://img.shields.io/badge/Nome-Joice_Mendes-pink)
 ![image_info](https://img.shields.io/badge/Professor-Adriano_Rivolli-blue)
 [![Badge ServeRest](https://img.shields.io/badge/Tema-Adoção_de_Pets-green)](https://github.com/ServeRest/ServeRest/)
 
